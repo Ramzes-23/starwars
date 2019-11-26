@@ -15,6 +15,9 @@ function() {
 }); 
 
 
+//глобальные переменные
+var PeopleArray; 
+
 
 //Функция для удаления строк таблицы
 function cleanTabElement(tableBody) {
@@ -27,29 +30,32 @@ function loaderPeople () {
 		url:"https://swapi.co/api/people/",
 		type : "get",
 		success: function(data){
-			 var infoPeople = data;
-			 var count = infoPeople.count;
-			 var next = infoPeople.previous;
-			 var results = infoPeople.results;
-			 var name = results[0].name;
+			 PeopleArray = data;
+			 var count = PeopleArray.count;
+			 var next = PeopleArray.previous;
+			 var results = PeopleArray.results;
 			 
+	 
+	      loaderObject();
    //эта переменная хранит в мебе всю таблицу
 			   var peopletable = $('#people-table'); 
 			   var htmlTR="";
         
-        cleanTabElement(peopletable);
+    cleanTabElement(peopletable);
       //цикл по перебору всех имен на странице
 					   $.each(results,function(i,result){ 
 					   	          htmlTR="<tr>"+
-					                  "<td>"+"<a id="+i+ " "+"href='https://swapi.co/api/people/'>"+result.name+"</a>"+"</td>"+ 
+					                  "<td>"+"<button class='btn btn-dark' id="+i+">"+result.name+
+					                  "</button>"+"</td>"+ 
 					                  "</tr>";
 					               peopletable.find('tbody').append(htmlTR);
 					               
 									}
        
 								);
-			}	
 
+			}	
+  
 		});
 	};
 
@@ -99,7 +105,7 @@ function loaderStarships () {
 			 var count = infoStarships.count;
 			 var next = infoStarships.previous;
 			 var results = infoStarships.results;
-			 var name = results[0].name;
+			 
 			 
    //эта переменная хранит в мебе всю таблицу
 			   var peopletable = $('#people-table'); 
@@ -120,5 +126,35 @@ function loaderStarships () {
 								);
 			}	
 
+		});
+	};
+
+   
+
+	function loaderObject () {
+		$.ajax({
+		url:"https://swapi.co/api/people",
+		type : "get",
+		success: function(data){
+			 PeopleArray = data;
+			 var People = PeopleArray.results;
+			 var name = People[0].name;
+			/*  
+			 var peopletable = $('#rezume'); 
+			 var htmlTR="";
+
+			  $.each(results,function(i,result){ 
+					          htmlTR="<tr>"+
+					                  "<td>"+"<a href='https://swapi.co/api/people/'>"+result.name+"</a>"+"</td>"+ 
+					                  "<td> </td>"+ 
+					                  "<td> </td>"+
+					               "</tr>";
+					               peopletable.find('tbody').append(htmlTR);
+					               
+									}
+             
+             //table.find('tbody').append(m1);... */
+			}	
+  
 		});
 	};
