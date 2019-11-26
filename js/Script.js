@@ -40,8 +40,8 @@ function loaderPeople () {
         cleanTabElement(peopletable);
       //цикл по перебору всех имен на странице
 					   $.each(results,function(i,result){ 
-					          htmlTR="<tr>"+
-					                  "<td>"+"<a href='https://swapi.co/api/people/'>"+result.name+"</a>"+"</td>"+ 
+					   	          htmlTR="<tr>"+
+					                  "<td>"+"<a id="+i+ " "+"href='https://swapi.co/api/people/'>"+result.name+"</a>"+"</td>"+ 
 					                  "</tr>";
 					               peopletable.find('tbody').append(htmlTR);
 					               
@@ -89,7 +89,7 @@ function loaderPlanets () {
 
 
 
-	//Загрузка всех планет 
+	//Загрузка всех кораблей 
 function loaderStarships () {
 		$.ajax({
 		url:"https://swapi.co/api/starships/",
