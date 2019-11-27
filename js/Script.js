@@ -21,19 +21,80 @@ function() {
             */        
 }); 
 //глобальные переменные
-var PeopleArray; 
+var ActivPeople; 
 var InfoPlanets;
-var infoStarships
+var infoStarships;
+
+function setBackPeople(){
+        
+
+   var backPeople;
+		$.ajax({
+		url:ActivPeople.previous,
+		type : "get",
+		success: function(data){
+			 
+			 backPeople = data;
+			 	 creatPeopleTable(backPeople.results); 
+			 	 ActivPeople=backPeople;    
+           }
+       
+		});
+	
+    
+
+}
+
+function setNextPeople(){
+        
+
+   var nextPeople;
+		$.ajax({
+		url:ActivPeople.next,
+		type : "get",
+		success: function(data){
+			 
+			 nextPeople = data;
+			 	 creatPeopleTable(nextPeople.results); 
+			 	 backPeople = ActivPeople;
+			 	 ActivPeople=nextPeople;    
+           }
+       
+		});
+	
+    
+
+}
 //Функция для удаления строк таблицы
 function cleanTabElement(tableBody) {
     tableBody.find("tr").remove();
+}
+
+function creatPeopleTable(results){
+//эта переменная хранит в мебе всю таблицу
+			   var peopletable = $('#people-table'); 
+			   var htmlTR="";
+        
+    cleanTabElement(peopletable);
+
+      //цикл по перебору всех имен на странице
+					   $.each(results,function(i,result){ 
+					   	         
+					   	          htmlTR="<tr>"+
+					                  "<td>"+"<button style='height:40px; width:250px' class='btn btn-dark' onClick='showInfoPerson(this.id);' id="+i+">"+result.name+
+					                  "</button>"+"</td>"+ 
+					                  "</tr>";
+					               peopletable.find('tbody').append(htmlTR);
+					               
+									});       
 }
 //Выводит информацию по выбранному персонажу
 function showInfoPerson (id)
             {
                
-               var people=PeopleArray.results[id];
+               var people=ActivPeople.results[id];
                var rezume = $('#rezume'); 
+			   cleanTabElement(rezume);
 			   var htmlTR="";
                 htmlTR="<tr>"+"<td>"+ 'Name:'+"</td>"+
                        "<td>"+people.name+"</td>"+
@@ -60,8 +121,7 @@ function showInfoPerson (id)
                        "<td>"+people.homeworld+"</td>"+
                        "</tr>";
                                       
-					                  
-					               rezume.find('tbody').append(htmlTR);
+					                  rezume.find('tbody').append(htmlTR);
             }
 //Загрузка имен людей в таблицу
 function loaderPeople () {
@@ -69,31 +129,15 @@ function loaderPeople () {
 		url:"https://swapi.co/api/people/",
 		type : "get",
 		success: function(data){
-			 PeopleArray = data;
-			 var count = PeopleArray.count;
-			 var next = PeopleArray.previous;
-			 var results = PeopleArray.results;
+			 ActivPeople = data;
+			 var count = ActivPeople.count;
+			 var next = ActivPeople.previous;
+			 var results = ActivPeople.results;
 			 
-	 
+	                creatPeopleTable(results);
 	      
-   //эта переменная хранит в мебе всю таблицу
-			   var peopletable = $('#people-table'); 
-			   var htmlTR="";
-        
-    cleanTabElement(peopletable);
-
-      //цикл по перебору всех имен на странице
-					   $.each(results,function(i,result){ 
-					   	         
-					   	          htmlTR="<tr>"+
-					                  "<td>"+"<button class='btn btn-dark' onClick='showInfoPerson(this.id);' id="+i+">"+result.name+
-					                  "</button>"+"</td>"+ 
-					                  "</tr>";
-					               peopletable.find('tbody').append(htmlTR);
-					               
-									}
-       
-								);
+   
+								
              /*loaderObjectPeople();*/
 			}	
   
@@ -105,6 +149,7 @@ function showInfoPlanets (id)
                
                var planet=InfoPlanets.results[id];
                var rezume = $('#rezume'); 
+               cleanTabElement(rezume);
 			   var htmlTR="";
                 htmlTR="<tr>"+"<td>"+ 'Name:'+"</td>"+
                        "<td>"+planet.name+"</td>"+
@@ -174,6 +219,7 @@ function showInfoStarships (id)
                
                var starships=infoStarships.results[id];
                var rezume = $('#rezume'); 
+               cleanTabElement(rezume);
 			   var htmlTR="";
                 htmlTR="<tr>"+"<td>"+ 'Name:'+"</td>"+
                        "<td>"+starships.name+"</td>"+
